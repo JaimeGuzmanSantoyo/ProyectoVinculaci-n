@@ -76,18 +76,7 @@ app.get('/rename',(req,res)=>{
 
 
 //agregar usuario
-app.post('/add',(req,res)=>{
-    const {name,email} = req.body;
-    const query = 'INSERT INTO trabajadores (name, email)VALUE (?,?)';
-    db.query(query,[name,email],(err)=>{
-        if(err){
-            console.error(`Error al insertar usuarios: Codigo-> ${err}`);
-            res.send('Error');
-        }else{
-             res.redirect('/');   
-        }
-    });
-});
+
 
 //editar usuario
 app.get('/edit/:NumeroTrabajador', (req, res) => {
