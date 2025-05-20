@@ -5,28 +5,37 @@
   <title>Gráficas de Excel</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <!-- Chart.js y Tailwind CSS -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Estilo adicional opcional -->
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
     }
   </style>
 </head>
-<body class="bg-gradient-to-br from-blue-50 to-blue-100 min-h-screen flex items-center justify-center p-6">
+<body class="bg-gradient-to-br from-blue-50 to-blue-100 min-h-screen flex flex-col items-center justify-start p-6">
 
   <div class="w-full max-w-4xl bg-white p-8 rounded-2xl shadow-2xl transition-all duration-300">
     <div class="flex justify-between items-center mb-6">
       <h1 class="text-3xl font-bold text-blue-700 flex items-center gap-2">
-        📊 Gráficas desde Excel
+        Gráficas desde Excel
       </h1>
       <button onclick="window.location.href='/rename'"
               class="bg-gray-700 hover:bg-gray-800 text-white font-medium px-4 py-2 rounded-lg transition-all">
-        ⬅️ Volver
+        Volver
       </button>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      <div>
+        <label class="text-sm font-medium text-gray-700">Columna de etiquetas (X):</label>
+        <select id="selectX" class="w-full border rounded px-3 py-2 mt-1"></select>
+      </div>
+      <div>
+        <label class="text-sm font-medium text-gray-700">Columna de valores (Y):</label>
+        <select id="selectY" class="w-full border rounded px-3 py-2 mt-1"></select>
+      </div>
     </div>
 
     <div class="relative w-full h-96">
@@ -35,6 +44,9 @@
   </div>
 
   <script>
+    let chart;
+    let data;
+
     document.addEventListener('DOMContentLoaded', () => {
       const saved = localStorage.getItem('tablaExcel');
       if (!saved) {
@@ -42,63 +54,98 @@
         return;
       }
 
-      const data = JSON.parse(saved);
+      data = JSON.parse(saved);
       if (data.length < 2 || data[0].length < 2) {
         alert("El archivo Excel debe tener al menos 2 columnas.");
         return;
       }
 
-      const labels = data.slice(1).map(row => row[0]);
-      const valores = data.slice(1).map(row => Number(row[1]) || 0);
+      const selectX = document.getElementById('selectX');
+      const selectY = document.getElementById('selectY');
 
-      new Chart(document.getElementById('graficaExcel'), {
-        type: 'bar',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: data[0][1] || 'Valores',
-            data: valores,
-            backgroundColor: 'rgba(59, 130, 246, 0.5)',
-            borderColor: 'rgba(59, 130, 246, 1)',
-            borderWidth: 2,
-            borderRadius: 6,
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: {
-              display: true,
-              labels: {
-                color: '#1e3a8a',
-                font: {
-                  size: 14,
-                  weight: 'bold'
+      // Rellenar selectores con nombres de columnas
+      data[0].forEach((col, index) => {
+        const optionX = document.createElement('option');
+        optionX.value = index;
+        optionX.textContent = col || `Columna ${index + 1}`;
+        selectX.appendChild(optionX);
+
+        const optionY = document.createElement('option');
+        optionY.value = index;
+        optionY.textContent = col || `Columna ${index + 1}`;
+        selectY.appendChild(optionY);
+      });
+
+      // Set defaults
+      selectX.value = 0;
+      selectY.value = 1;
+
+      function actualizarGrafica() {
+        const xIndex = parseInt(selectX.value);
+        const yIndex = parseInt(selectY.value);
+
+        const etiquetas = data.slice(1).map(row => row[xIndex] ?? '');
+        const valores = data.slice(1).map(row => Number(row[yIndex]) || 0);
+
+        const ctx = document.getElementById('graficaExcel').getContext('2d');
+        if (chart) chart.destroy(); // Eliminar gráfico previo
+
+        chart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: etiquetas,
+            datasets: [{
+              label: data[0][yIndex] || 'Valores',
+              data: valores,
+              backgroundColor: 'rgba(59, 130, 246, 0.5)',
+              borderColor: 'rgba(59, 130, 246, 1)',
+              borderWidth: 2,
+              borderRadius: 6,
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                display: true,
+                labels: {
+                  color: '#1e3a8a',
+                  font: {
+                    size: 14,
+                    weight: 'bold'
+                  }
+                }
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  color: '#334155'
+                },
+                grid: {
+                  color: '#e2e8f0'
+                }
+              },
+              x: {
+                ticks: {
+                  color: '#334155'
+                },
+                grid: {
+                  color: '#f1f5f9'
                 }
               }
             }
-          },
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: {
-                color: '#334155'
-              },
-              grid: {
-                color: '#e2e8f0'
-              }
-            },
-            x: {
-              ticks: {
-                color: '#334155'
-              },
-              grid: {
-                color: '#f1f5f9'
-              }
-            }
           }
-        }
-      });
+        });
+      }
+
+      // Eventos al cambiar los select
+      selectX.addEventListener('change', actualizarGrafica);
+      selectY.addEventListener('change', actualizarGrafica);
+
+      // Crear gráfica inicial
+      actualizarGrafica();
     });
   </script>
 
