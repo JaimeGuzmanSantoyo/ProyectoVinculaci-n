@@ -1,57 +1,107 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Gráficas de Excel</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta charset="UTF-8" />
+  <title>Editar Excel</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 p-6">
-  <div class="max-w-4xl mx-auto bg-white p-6 rounded-2xl shadow-lg">
-    <h1 class="text-3xl font-bold text-center mb-6">📈 Gráficas desde Excel</h1>
-    <canvas id="graficaExcel" height="100"></canvas>
+<body class="bg-gray-100 min-h-screen p-6">
+
+  <div class="flex gap-4 mb-6">
+    <button onclick="guardarCambios()" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+      Guardar Cambios
+    </button>
+    <button onclick="exportarExcel()" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+      Exportar Excel
+    </button>
+    <button onclick="window.location.href='/rename'" class="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500">
+      Volver
+    </button>
+  </div>
+
+  <div class="max-w-5xl mx-auto bg-white p-6 rounded-2xl shadow-lg">
+    <h1 class="text-2xl font-bold text-center mb-6 text-gray-800">Editor de Excel</h1>
+    <div id="editableTable" class="overflow-x-auto"></div>
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
+    let tableData = [];
+
+    window.addEventListener('DOMContentLoaded', () => {
       const saved = localStorage.getItem('tablaExcel');
       if (!saved) {
-        alert("No hay datos cargados desde Excel.");
+        alert("No hay datos cargados.");
         return;
       }
 
-      const data = JSON.parse(saved);
-      if (data.length < 2 || data[0].length < 2) {
-        alert("El archivo Excel debe tener al menos 2 columnas.");
-        return;
-      }
-
-      const labels = data.slice(1).map(row => row[0]);
-      const valores = data.slice(1).map(row => Number(row[1]) || 0);
-
-      new Chart(document.getElementById('graficaExcel'), {
-        type: 'bar',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: data[0][1] || 'Valores',
-            data: valores,
-            backgroundColor: 'rgba(59, 130, 246, 0.5)',
-            borderColor: 'rgba(59, 130, 246, 1)',
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: { display: true }
-          },
-          scales: {
-            y: { beginAtZero: true }
-          }
-        }
-      });
+      tableData = JSON.parse(saved);
+      renderEditableTable(tableData);
     });
+
+    function renderEditableTable(data) {
+      let html = '<table class="min-w-full text-left border-collapse">';
+      html += '<thead><tr class="bg-blue-100 text-blue-800 font-semibold">';
+      data[0].forEach(cell => {
+        html += `<th class="py-3 px-4 border-b border-blue-200">${cell ?? ''}</th>`;
+      });
+      html += '<th class="py-3 px-4 border-b border-blue-200">Eliminar</th>'; // Columna para botón eliminar
+      html += '</tr></thead><tbody>';
+
+      for (let i = 1; i < data.length; i++) {
+        html += '<tr>';
+        for (let j = 0; j < data[i].length; j++) {
+          html += `<td class="py-2 px-4 border-b border-gray-200">
+                    <input type="text" class="w-full bg-transparent outline-none" 
+                           value="${data[i][j] ?? ''}" 
+                           data-row="${i}" data-col="${j}" 
+                           oninput="actualizarCelda(event)">
+                   </td>`;
+        }
+        html += `<td class="py-2 px-4 border-b border-gray-200 text-center">
+                    <button 
+                      class="text-red-600 hover:text-red-800 font-bold"
+                      onclick="eliminarFila(${i})"
+                      title="Eliminar fila">✖</button>
+                 </td>`;
+        html += '</tr>';
+      }
+
+      html += '</tbody></table>';
+      document.getElementById('editableTable').innerHTML = html;
+    }
+
+    function actualizarCelda(event) {
+      const input = event.target;
+      const row = parseInt(input.dataset.row);
+      const col = parseInt(input.dataset.col);
+      tableData[row][col] = input.value;
+    }
+
+    function eliminarFila(fila) {
+      if (confirm("¿Seguro que quieres eliminar esta fila?")) {
+        tableData.splice(fila, 1);
+        renderEditableTable(tableData);
+      }
+    }
+
+    function guardarCambios() {
+      localStorage.setItem('tablaExcel', JSON.stringify(tableData));
+      alert('Cambios guardados correctamente.');
+    }
+
+    function exportarExcel() {
+      if (!tableData || tableData.length === 0) {
+        alert("No hay datos para exportar.");
+        return;
+      }
+
+      const ws = XLSX.utils.aoa_to_sheet(tableData);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Hoja1");
+
+      XLSX.writeFile(wb, "datos_editados.xlsx");
+    }
   </script>
 </body>
 </html>

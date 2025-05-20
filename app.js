@@ -45,59 +45,32 @@ app.get('/unam.jpg', (req, res) => {
     res.sendFile(__dirname + '/views/unam.jpg');
   });
 app.get('/', (req, res) => {
-    const query = 'SELECT * FROM trabajadores';
-    db.query(query, (err, results) => {
-        if (err) {
-            console.error(`Error al recuperar datos: ${err}`);
-            res.send('Error al recuperar datos');
-        } else {
-            res.render('index', { trabajadores: results });
-        }
-    });
+   res.render('index');
 });
 
-//Mostrar lista de usuarios
+
 app.post('/rename', (req, res) => {
-    const query = 'SELECT * FROM trabajadores';
-    
-    db.query(query, (err, results) => {
-        if (err) {
-            console.error(`Error al recuperar datos -> Codigo de error: ${err}`);
-            res.send('Error en recuperar datos');
-        } else {
-            const trabajadores = results;
-            res.render('rename', { trabajadores: trabajadores });
-        }
-    });
+   res.render('rename');
 });
 
 
-//agregar usuario
+app.get('/rename', (req, res) => {
+   res.render('rename');
+});
 
 
 //editar usuario
-app.get('/edit', (req, res) => {
+app.post('/edit', (req, res) => {
   res.render('edit'); 
 });
 
- app.post('/login_admin',(req, res)=>{
-  res.render('login_admin')
+//Ir a login de administrador
+ app.get('/login_admin',(req, res)=>{
+  res.render('login_admin');
  })
-  
-//eliminar
 
-app.post('/delete/:id',(req,res)=>{
-    const {id}=req.params;
-    const query = 'DELETE FROM trabajadores WHERE id = ?';
-    db.query(query,[id],(err)=>{
-        if(err){
-            console.error('Error en el Delete');
-            res.send("error al eliminar");
-        }else{
-            res.redirect('/');
-        }
-    });
-
+ app.get('/grafica', (req, res) => {
+  res.render('grafica'); 
 });
 
 
