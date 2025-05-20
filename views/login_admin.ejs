@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acceso Administrador</title>
+
+  <!-- Materialize CSS e íconos -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #eaf6ff;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .container-fondo {
+      width: 60%;
+      background-image: url('unam.jpg');
+      background-size: cover;
+      background-position: center;
+      border-top-right-radius: 30px;
+      border-bottom-right-radius: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      color: #fff;
+      text-shadow: 1px 1px 4px rgba(0,0,0,0.7);
+      padding: 2rem;
+    }
+
+    .container-fondo h1 {
+      font-size: 3.5em;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+
+    .formulario-wrapper {
+      width: 40%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .form-container {
+      background: white;
+      padding: 3rem 2.5rem;
+      border-radius: 16px;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+      width: 90%;
+      max-width: 400px;
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    h2 {
+      font-size: 26px;
+      margin-bottom: 2rem;
+      color: #00796b;
+      text-align: center;
+    }
+
+    label {
+      color: #1976d2;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      margin-bottom: 1.5rem;
+    }
+
+    button {
+      width: 100%;
+    }
+
+    #message {
+      color: red;
+      margin-top: 1rem;
+      text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+        height: auto;
+      }
+
+      .container-fondo,
+      .formulario-wrapper {
+        width: 100%;
+        border-radius: 0;
+      }
+
+      .container-fondo {
+        padding: 1rem;
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Lado izquierdo con imagen y mensaje -->
+  <div class="container-fondo">
+    <h1>Bienvenido</h1>
+    <h5>Área de administración de la plataforma</h5>
+  </div>
+
+  <!-- Formulario de inicio de sesión -->
+  <div class="formulario-wrapper">
+    <div class="form-container">
+      <h2>Ingreso de Administrador</h2>
+      <form id="loginForm" method="POST" action="/rename">
+        <div class="input-field">
+          <input id="user" name="user" type="text" required>
+          <label for="user">Usuario Administrador</label>
+        </div>
+        <div class="input-field">
+          <input id="password" name="password" type="password" required>
+          <label for="password">Contraseña</label>
+        </div>
+        <button class="btn waves-effect waves-light teal darken-3" type="submit">Ingresar</button>
+        <div id="message"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- JS para validar contraseña -->
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      const username = document.getElementById('user').value;
+      const password = document.getElementById('password').value;
+
+      const validUsername = 'PumaMaster';
+      const validPassword = 'Jesusdeveracruz18!';
+
+      if (username === validUsername && password === validPassword) {
+        window.location.href = '/edit';
+      } else {
+        document.getElementById('message').innerText = 'Error: Usuario o contraseña incorrectos.';
+      }
+    });
+  </script>
+
+  <!-- Materialize JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>

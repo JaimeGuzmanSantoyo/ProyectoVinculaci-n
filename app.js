@@ -14,9 +14,9 @@ app.set('view engine', 'ejs');
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'zeus0401',
+    password: '1234',
     database: 'profesores',
-    port: '3308'
+    port: '3306'
 });
 
 //conexion a la DB
@@ -77,55 +77,12 @@ app.post('/rename', (req, res) => {
 
 //editar usuario
 app.get('/edit', (req, res) => {
-  res.render('edit'); // Asegúrate de tener views/edit.ejs
+  res.render('edit'); 
 });
 
-  app.post('/edit', (req, res) => {
-    // 1. Recuperar todos los datos del formulario
-    const { NumeroTrabajador, NombreCompleto, CorreoElectronicoInstitucional, Curp, TelefonoCelular, Direccion, Categoria, GradoAcademico, AntiguedadUNAM, AntiguedadCarrera, Genero, Telefonocasa } = req.body;
-
-    console.log(`Actualizando trabajador con NumeroTrabajador: ${NumeroTrabajador}`);
-
-    // 2. Ejecutar la consulta UPDATE
-    const query = `
-        UPDATE trabajadores SET
-            NombreCompleto = ?,
-            CorreoElectronicoInstitucional = ?,
-            Curp = ?,
-            TelefonoCelular = ?,
-            Direccion = ?,
-            Categoria = ?,
-            GradoAcademico = ?,
-            AntiguedadUNAM = ?,
-            AntiguedadCarrera = ?,
-            Genero = ?,
-            Telefonocasa = ?
-        WHERE NumeroTrabajador = ?
-    `;
-
-    db.query(query, [NombreCompleto, CorreoElectronicoInstitucional, Curp, TelefonoCelular, Direccion, Categoria, GradoAcademico, AntiguedadUNAM, AntiguedadCarrera, Genero, Telefonocasa, NumeroTrabajador], (err, results) => {
-        if (err) {
-            console.error(`Error al actualizar datos: ${err}`);
-            return res.status(500).send('Error al actualizar el usuario');
-        }
-
-        // 3. Consulta para obtener los datos actualizados
-        const selectQuery = 'SELECT * FROM trabajadores WHERE NumeroTrabajador = ?';
-        db.query(selectQuery, [NumeroTrabajador], (selectErr, selectResults) => {
-            if (selectErr) {
-                console.error(`Error al buscar el usuario actualizado: ${selectErr}`);
-                return res.status(500).send('Error al buscar el usuario actualizado');
-            }
-
-            // 4. Renderizar la vista con los datos actualizados
-            if (selectResults.length > 0) {
-                res.render('edit', { trabajadores: selectResults[0] }); // Renderiza la vista con los datos actualizados
-            } else {
-                res.status(404).send('Usuario no encontrado después de la actualización');
-            }
-        });
-    });
-});
+ app.post('/login_admin',(req, res)=>{
+  res.render('login_admin')
+ })
   
 //eliminar
 
