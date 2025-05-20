@@ -87,26 +87,9 @@ app.post('/add',(req,res)=>{
 });
 
 //editar usuario
-app.get('/edit/:NumeroTrabajador', (req, res) => {
-    console.log('GET /edit/:NumeroTrabajador');
-    const { NumeroTrabajador } = req.params;
-    console.log(`numero de trabajador recibido: ${NumeroTrabajador}`);
-    const query = 'SELECT * FROM trabajadores WHERE NumeroTrabajador = ?';
-    db.query(query, [NumeroTrabajador], (err, results) => {
-      console.log('Query ejecutada');
-      if (err) {
-        console.error(`Error al buscar usuario: ${err}`);
-        res.send('Error al buscar usuario');
-      } else {
-        console.log('Resultado de la query:', results);
-        if (results.length > 0) {
-          res.render('edit', { trabajadores: results[0] }); 
-        } else {
-          res.send('Usuario no encontrado');
-        }
-      }
-    });
-  });
+app.get('/edit', (req, res) => {
+  res.render('edit'); // Asegúrate de tener views/edit.ejs
+});
 
   app.post('/edit', (req, res) => {
     // 1. Recuperar todos los datos del formulario

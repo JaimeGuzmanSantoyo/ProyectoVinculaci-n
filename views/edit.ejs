@@ -1,75 +1,93 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Document</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <style>
-        /* Tu CSS aquí */
-    </style>
+  <meta charset="UTF-8">
+  <title>Editar Excel</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="deep-purple lighten-4">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<body class="bg-gray-100 min-h-screen p-6">
 
-    <form action="/edit" method="post">
-        <div class="container" style="background-color: rgb(230, 197, 231); border-radius: 5%;">
-            <label for="NumeroTrabajador" style="display: block; font-size: 30px; color: black; background-color: rgb(249, 250, 243); margin: 0 auto; width: fit-content;">Introduce el número del trabajador:</label>
-            <br><br><br>
-            <input style="border-radius: 15%; color: darkmagenta; font-size: 30px; background-color: rgb(236, 241, 240); text-align: right;" type="text" id="NumeroTrabajador" name="NumeroTrabajador" value="<%= trabajadores.NumeroTrabajador%>" readonly>
-            <br><br><br><br>
-            <label for="NombreCompleto" style="display: block; font-size: 30px; color: rgb(7, 7, 7); background-color: white; margin: 0 auto; margin: 0 auto; width: fit-content">Nombre y apellidos:</label>
-            <br><br><br><br>
-            <input style="border-radius: 15%; color: darkmagenta; font-size: 30px; background-color: rgb(255, 255, 255);" type="text" id="NombreCompleto" name="NombreCompleto" value="<%= trabajadores.NombreCompleto %>">
-            <br><br><br><br>
-            <label for="CorreoElectronicoInstitucional" style="display: block; font-size: 30px; color: black; background-color: rgb(255, 255, 255); margin: 0 auto; width: fit-content">Correo electrónico:</label>
-            <br><br><br><br>
-            <input style="border-radius: 15%; color: darkmagenta; font-size: 30px; background-color: rgb(255, 255, 255);" type="email" id="CorreoElectronicoInstitucional" name="CorreoElectronicoInstitucional" value="<%= trabajadores.CorreoElectronicoInstitucional %>">
-            <br><br><br><br>
-            <label for="Curp" style="display: block; font-size: 30px; color: black; background-color: rgb(255, 255, 255); margin: 0 auto; width: fit-content">CURP:</label>
-            <br><br>
-            <input style="border-radius: 15%; color: darkmagenta; font-size: 30px; background-color: rgb(255, 255, 255);" type="text" id="Curp" name="Curp" value="<%= trabajadores.Curp %>">
-            <br><br>
+  <div class="flex gap-4 mb-6">
+    <button onclick="guardarCambios()" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+      Guardar Cambios
+    </button>
+    <button onclick="exportarExcel()" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+      Exportar Excel
+    </button>
+    <button onclick="window.location.href='/rename'" class="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500">
+      Volver
+    </button>
+  </div>
 
-            <label for="TelefonoCelular" style="display: block; font-size: 30px; color: black; background-color: rgb(255, 255, 255); margin: 0 auto; width: fit-content;">Número celular:</label>
-            <br><br>
-            <input style="border-radius: 15%; color: darkmagenta; font-size: 30px; background-color: rgb(255, 255, 255);" type="text" id="TelefonoCelular" name="TelefonoCelular" value="<%= trabajadores.TelefonoCelular %>">
-            <label for="Direccion" style="display: block; font-size: 30px; color: black; background-color: rgb(255, 255, 255); margin: 0 auto; width: fit-content;">Dirección:</label>
-            <br><br>
-            <input style="border-radius: 15%; color: darkmagenta; font-size: 30px; background-color: rgb(255, 255, 255);" type="text" id="Direccion" name="Direccion" value="<%= trabajadores.Direccion %>">
-            <br><br>
-            <label for="Categoria" style="display: block; font-size: 30px; color: black; background-color: rgb(255, 255, 255); margin: 0 auto; width: fit-content;">Categoría:</label>
-            <br><br>
-            <input style="border-radius: 15%; color: darkmagenta; font-size: 30px; background-color: rgb(255, 255, 255);" type="text" id="Categoria" name="Categoria" value="<%= trabajadores.Categoria %>">
-            <label for="GradoAcademico" style="display: block; font-size: 30px; color: black; background-color: rgb(255, 255, 255); margin: 0 auto; width: fit-content;">Grado académico:</label>
-            <br><br>
-            <input style="border-radius: 15%; color: darkmagenta; font-size: 30px; background-color: rgb(255, 255, 255);" type="text" id="GradoAcademico" name="GradoAcademico" value="<%= trabajadores.GradoAcademico%>">
-            <br><br>
-            <label for="AntiguedadUNAM" style="display: block; font-size: 30px; color: black; background-color: rgb(255, 255, 255); margin: 0 auto; width: fit-content;">Antigüedad en la UNAM:</label>
-            <br><br>
-            <input style="border-radius: 15%; color: darkmagenta; font-size: 30px; background-color: rgb(255, 255, 255);" type="text" id="AntiguedadUNAM" name="AntiguedadUNAM" value="<%= trabajadores.AntiguedadUNAM%>">
-            <br><br>
-            <label for="CorreoElectronicoInstitucional" style="display: block; font-size: 30px; color: black; background-color: rgb(255, 255, 255); margin: 0 auto; width: fit-content;">Correo electrónico institucional:</label>
-            <br><br>
-            <input style="border-radius: 15%; color: darkmagenta; font-size: 30px; background-color: rgb(255, 255, 255);" type="text" id="CorreoElectronicoInstitucional" name="CorreoElectronicoInstitucional" value="<%= trabajadores.CorreoElectronicoInstitucional%>">
-            <br><br>
-            <br><br>
-            <label for="AntiguedadCarrera" style="display: block; font-size: 30px; color: black; background-color: rgb(255, 255, 255); margin: 0 auto; width: fit-content;">Antigüedad en la carrera:</label>
-            <br><br>
-            <input style="border-radius: 15%; color: darkmagenta; font-size: 30px; background-color: rgb(255, 255, 255);" type="text" id="AntiguedadCarrera" name="AntiguedadCarrera" value="<%= trabajadores.AntiguedadCarrera %>">
-            <br><br>
-            <label for="Genero" style="display: block; font-size: 30px; color: black; background-color: rgb(248, 252, 250); margin: 0 auto; width: fit-content;">Género (F/M):</label>
-            <br><br>
-            <input style="border-radius: 15%; color: darkmagenta; font-size: 30px; background-color: rgb(255, 255, 255);" type="text" id="Genero" name="Genero" value="<%= trabajadores.Genero %>">
-            <br><br>
-            <label for="Telefonocasa" style="display: block; font-size: 30px; color: black; background-color: rgb(248, 252, 250); margin: 0 auto; width: fit-content;">Teléfono de casa:</label>
-            <br><br>
-            <input style="border-radius: 15%; color: darkmagenta; font-size: 30px; background-color: rgb(255, 255, 255);" type="text" id="Telefonocasa" name="Telefonocasa" value="<%= trabajadores.telefonocasa %>">
-            <br><br>
-        </div>
-        <br><br><br><br><br>
-        <div class="containerbuttons">
-            <button class="purple" style="font-size: 25px; text-align: center; color: black;" type="submit">Actualizar Registro</button>
-            <button class="purple" style="font-size: 25px; text-align: center; color: black;"><a href="rename">Consultar BASE DE DATOS</a></button>
-        </div>
-    </form>
+  <div class="max-w-5xl mx-auto bg-white p-6 rounded-2xl shadow-lg">
+    <h1 class="text-2xl font-bold text-center mb-6 text-gray-800">Editor de Excel</h1>
+    <div id="editableTable" class="overflow-x-auto"></div>
+  </div>
+
+  <script>
+    let tableData = [];
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem('tablaExcel');
+      if (!saved) {
+        alert("No hay datos cargados.");
+        return;
+      }
+
+      tableData = JSON.parse(saved);
+      renderEditableTable(tableData);
+    });
+
+    function renderEditableTable(data) {
+      let html = '<table class="min-w-full text-left border-collapse">';
+      html += '<thead><tr class="bg-blue-100 text-blue-800 font-semibold">';
+      data[0].forEach(cell => {
+        html += `<th class="py-3 px-4 border-b border-blue-200">${cell ?? ''}</th>`;
+      });
+      html += '</tr></thead><tbody>';
+
+      for (let i = 1; i < data.length; i++) {
+        html += '<tr>';
+        for (let j = 0; j < data[i].length; j++) {
+          html += `<td class="py-2 px-4 border-b border-gray-200">
+                    <input type="text" class="w-full bg-transparent outline-none" 
+                           value="${data[i][j] ?? ''}" 
+                           data-row="${i}" data-col="${j}" 
+                           oninput="actualizarCelda(event)">
+                   </td>`;
+        }
+        html += '</tr>';
+      }
+
+      html += '</tbody></table>';
+      document.getElementById('editableTable').innerHTML = html;
+    }
+
+    function actualizarCelda(event) {
+      const input = event.target;
+      const row = parseInt(input.dataset.row);
+      const col = parseInt(input.dataset.col);
+      tableData[row][col] = input.value;
+    }
+
+    function guardarCambios() {
+      localStorage.setItem('tablaExcel', JSON.stringify(tableData));
+      alert('Cambios guardados correctamente.');
+    }
+
+    function exportarExcel() {
+      if (!tableData || tableData.length === 0) {
+        alert("No hay datos para exportar.");
+        return;
+      }
+
+      const ws = XLSX.utils.aoa_to_sheet(tableData);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Hoja1");
+
+      XLSX.writeFile(wb, "datos_editados.xlsx");
+    }
+  </script>
 </body>
 </html>
