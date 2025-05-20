@@ -161,7 +161,7 @@
  <div class="formulario-wrapper">
     <div class="form-container">
         <h2>Ingresar usuario</h2>
-        <form id="loginForm" action="/rename" method="POST">  
+        <form id="loginForm" method="POST" action="/rename">
             <label for="user">Usuario:</label><!-- Letiqueta para decir que se tiene que ingresar un usuario -->
             <input type="text" id="user" name="user" required>  <!-- Los parametros que se van a mejorar  -->
 
@@ -174,26 +174,24 @@
     </div>
 </div>
 
-<script>
+<script>   // se abre un script 
     document.getElementById('loginForm').addEventListener('submit', function(event) {
-        event.preventDefault(); // Evita el envío del formulario
+        event.preventDefault(); // Evita el envío automático del formulario
 
-        const username = document.getElementById('user').value; 
+        const username = document.getElementById('user').value;
         const password = document.getElementById('password').value;
 
-        // Aquí vienen definidas las credenciales de usuario que debe de ingresar para poder acceder 
-        const validUsername = 'usuario';  //credencial numero 1 
-        const validPassword = 'contraseña123'; // credencial numero 2 
+        const validUsername = 'usuario';
+        const validPassword = 'contraseña123';  // se establecen las contraseñas para a la autentificacion
 
-        // Verifica las credenciales
-        if (username === validUsername && password === validPassword) { // lo que pasa aqui es quse validan los parametros para e acceso de contraseñas ,se comparan contraseñas 
-            document.getElementById('message').innerText = '¡Contraseña correcta! Accediendo...';  // si las contraseñas coinciden se tira un mensaje de acceso
-          
-             window.location.href = '/rename'; // Redirige a la página /rename
+        if (username === validUsername && password === validPassword) {  // validacion de contraseñas 
+            this.submit();
         } else {
-            document.getElementById('message').innerText = 'Error: Contraseña incorrecta. Inténtalo de nuevo.';   // si la contraseña esta mal ,se marca un else 
+            document.getElementById('message').innerText = 'Error: Contraseña incorrecta.'; //se tira un error a partir de un else si las contraseñas no coinciden  
         }
     });
+</script>
+
 </script>
   <!-- Materialize JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
