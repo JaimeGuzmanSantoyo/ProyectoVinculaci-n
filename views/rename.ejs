@@ -13,12 +13,12 @@
       Cerrar Sesión
     </button>
     <button onclick="exportarExcel()" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
-      Crear archivo a  Excel
+      Exportar a Excel
     </button>
   </div>
 
   <div class="max-w-5xl mx-auto bg-white p-8 rounded-2xl shadow-xl">
-    <h1 class="text-3xl font-bold mb-6 text-gray-800 text-center"><img src="f.png" width="50" height="50" >Importar archivo  Excel</a> </h1>
+    <h1 class="text-3xl font-bold mb-6 text-gray-800 text-center">📊 Visor de Archivos Excel</h1>
 
     <div class="flex justify-center mb-8">
       <input type="file" id="fileInput" accept=".xlsx, .xls"
@@ -64,27 +64,26 @@
     });
 
     function displayTable(data) {
-  if (!data || data.length === 0) return;
+      if (!data || data.length === 0) return;
 
-  let html = '<table class="min-w-full text-left border-collapse">';
-  html += '<thead><tr class="bg-blue-100 text-blue-800 font-semibold">';
-  data[0].forEach(cell => {
-    html += `<th class="py-3 px-4 border-b border-blue-200">${cell ?? ''}</th>`;
-  });
-  html += '</tr></thead><tbody>';
+      let html = '<table class="min-w-full text-left border-collapse">';
+      html += '<thead><tr class="bg-blue-100 text-blue-800 font-semibold">';
+      data[0].forEach(cell => {
+        html += `<th class="py-3 px-4 border-b border-blue-200">${cell ?? ''}</th>`;
+      });
+      html += '</tr></thead><tbody>';
 
-  data.slice(1).forEach(row => {
-    html += '<tr class="hover:bg-gray-50">';
-    row.forEach(cell => {
-      html += `<td class="py-2 px-4 border-b border-gray-200">${cell ?? ''}</td>`;
-    });
-    html += '</tr>';
-  });
+      data.slice(1).forEach(row => {
+        html += '<tr class="hover:bg-gray-50">';
+        row.forEach(cell => {
+          html += `<td class="py-2 px-4 border-b border-gray-200">${cell ?? ''}</td>`;
+        });
+        html += '</tr>';
+      });
 
-  html += '</tbody></table>';
-  document.getElementById('excelData').innerHTML = html;
-}
-
+      html += '</tbody></table>';
+      document.getElementById('excelData').innerHTML = html;
+    }
 
     function exportarExcel() {
       const savedData = localStorage.getItem('tablaExcel');
@@ -104,10 +103,11 @@
     function cerrarSesion() {
       // No borramos localStorage
       // Aquí podrías borrar cookies o tokens si los tuvieras
-      alert("la secion se ha  cerrado correctamente  (pero los datos se conservaron).");
+      alert("Sesión cerrada (pero los datos se conservaron).");
       window.location.href = '/'; // Redirigir al inicio o login
     }
   </script>
+
 
 </body>
 </html>

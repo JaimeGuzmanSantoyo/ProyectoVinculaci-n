@@ -29,7 +29,7 @@ db.connect(err=>{
 });
 /*Puerto*/
 const port = 3038; 
-const hostName= '0.0.0.0';
+const hostName= 'localhost';
 //server inicio
 app.listen(port,hostName,()=>{
     console.log(`El server esta en escucha desde http://${hostName}:${port}`);
@@ -57,21 +57,18 @@ app.get('/', (req, res) => {
 });
 
 //Mostrar lista de usuarios
-app.get('/rename',(req,res)=>{
-  
+app.post('/rename', (req, res) => {
     const query = 'SELECT * FROM trabajadores';
     
-    db.query(query,(err,results)=>{
-        if(err){
-            console.error(`Error al recuperar datos -> Codigo de error:${err}`);
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error(`Error al recuperar datos -> Codigo de error: ${err}`);
             res.send('Error en recuperar datos');
-        }else{
-            const trabajadores = results; 
-            res.render('rename',{trabajadores: trabajadores}); 
+        } else {
+            const trabajadores = results;
+            res.render('rename', { trabajadores: trabajadores });
         }
-
-    });    
-
+    });
 });
 
 
@@ -160,8 +157,7 @@ app.post('/delete/:id',(req,res)=>{
             res.redirect('/');
         }
     });
+
 });
 
-app.get('/',(req,res)=>{
-res.render("rename",{Listar_usuarios:"este es un mensaje"})
-});
+
