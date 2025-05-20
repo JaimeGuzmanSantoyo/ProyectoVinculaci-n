@@ -14,9 +14,9 @@ app.set('view engine', 'ejs');
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'zeus0401',
+    password: '1234',
     database: 'profesores',
-    port: '3308'
+    port: '3306'
 });
 
 //conexion a la DB
