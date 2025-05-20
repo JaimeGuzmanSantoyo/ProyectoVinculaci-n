@@ -14,9 +14,9 @@ app.set('view engine', 'ejs');
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '1234',
+    password: 'zeus0401',
     database: 'profesores',
-    port: '3306'
+    port: '3308'
 });
 
 //conexion a la DB
@@ -73,18 +73,7 @@ app.post('/rename', (req, res) => {
 
 
 //agregar usuario
-app.post('/add',(req,res)=>{
-    const {name,email} = req.body;
-    const query = 'INSERT INTO trabajadores (name, email)VALUE (?,?)';
-    db.query(query,[name,email],(err)=>{
-        if(err){
-            console.error(`Error al insertar usuarios: Codigo-> ${err}`);
-            res.send('Error');
-        }else{
-             res.redirect('/');   
-        }
-    });
-});
+
 
 //editar usuario
 app.get('/edit', (req, res) => {
@@ -154,6 +143,4 @@ app.post('/delete/:id',(req,res)=>{
 
 });
 
-app.get('/',(req,res)=>{
-res.render("rename",{Listar_usuarios:"este es un mensaje"})
-});
+
